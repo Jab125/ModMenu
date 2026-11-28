@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget.entries;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.terraformersmc.modmenu.ModMenu;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -23,7 +24,6 @@ public class ParentEntry extends ModListEntry {
     private static final Identifier PARENT_MOD_TEXTURE = Identifier.fromNamespaceAndPath(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
     protected List<Mod> children;
     protected ModListWidget list;
-    protected boolean hoveringIcon = false;
 
     public ParentEntry(Mod parent, List<Mod> children, ModListWidget list) {
         super(parent, list);
@@ -102,7 +102,7 @@ public class ParentEntry extends ModListEntry {
                 false
         );
 
-        this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + iconSize && mouseY >= y - 1 && mouseY <= y - 1 + iconSize;
+        boolean hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + iconSize && mouseY >= y - 1 && mouseY <= y - 1 + iconSize;
         if (isMouseOver(mouseX, mouseY)) {
             drawContext.fill(x, y, x + iconSize, y + iconSize, 0xA0909090);
             int xOffset = list.getParent().showModChildren.contains(getMod().getId()) ? iconSize : 0;
@@ -120,6 +120,9 @@ public class ParentEntry extends ModListEntry {
                     ModMenuConfig.COMPACT_LIST.getValue() ? (int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) : 256,
                     0xFFFFFFFF
             );
+            if (hoveringIcon) {
+                drawContext.requestCursor(this.shouldTakeFocusAfterInteraction() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);
+            }
         }
     }
 
